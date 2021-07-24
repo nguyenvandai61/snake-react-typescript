@@ -1,5 +1,5 @@
 import { DIRECTION } from '../../enums/Direction';
-import Snake from '../Snake';
+import Snake from '../SnakeModel';
 
 describe('Snake move', () => {
     let snake:Snake;

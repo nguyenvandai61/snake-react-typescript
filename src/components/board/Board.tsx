@@ -14,19 +14,20 @@ interface BoardProps {
 export function Board(props: BoardProps) {
     const [board, setBoard] = useState<any>(Array.from({ length: props.height }, () => Array.from({ length: props.width }, () => 0)));
     const [boardController, ] = useState<any>(new BoardController(board));
+    // Init
+    useEffect(() => {
+        boardController.initGame();
+        boardController.drawApple();
+        handleChangeBoard();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    
+
+    // Update
     const handleChangeBoard = () => {
         let copy = [...board];
-        let snakeBody = boardController.getSnake().getSnakeBody();
-        console.log('snake body', snakeBody);
-        let iterMeat = snakeBody?.getHead();
-        let iterMeat2 = snakeBody?.getAfterTail(); 
-        let head = iterMeat ? iterMeat.get_elem().position : { x: 3, y: 3 };
-        let afterTail = iterMeat2? iterMeat2.get_elem().position : { x: 3, y: 3 };
-        // highlight head
-        board[afterTail.y][afterTail.x] = 0;
-        board[head.y][head.x] = 1;
+        boardController.drawSnakeMove();
         setBoard(copy);
-        console.log('ready change', boardController.getSnake().getHead()?.get_elem().position);
     }
     
 
@@ -34,21 +35,20 @@ export function Board(props: BoardProps) {
         console.log('render', JSON.parse(JSON.stringify(board)))
     });
     
-    useEffect(() => {
-        boardController.initGame();
-        handleChangeBoard();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     useEffect(() => {
         console.log('rendered & board changed', JSON.parse(JSON.stringify(board)))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [board]);
 
+    // Button onClick handler
     const execute = () => {
+        if (boardController.getSnake().getNextCell())
         boardController.getSnake().move(DIRECTION.DOWN);
         handleChangeBoard();
     }
+
+
     const renderBoard = () => {
         let newBoard = Object.assign([], board);
         return newBoard.map((row: number[], index: number) => {
