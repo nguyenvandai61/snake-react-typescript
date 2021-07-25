@@ -14,11 +14,13 @@ interface SnakeMeat  {
 export default class SnakeModel extends Item {
     private _body: SinglyLinkedList<SnakeMeat>| null = null;
     private _direction: DIRECTION = DIRECTION.DOWN;
+    private _isAlive: boolean = false;
 
     constructor(x: number, y: number) {
         super(x, y, ITEM_STATE.SNAKE);
         let newSnakeMeat: SnakeMeat = {position : this.getPosition()}
         this._body = new SinglyLinkedList(new LinkedNode(newSnakeMeat));
+        this._isAlive = true;
     }
 
     /**
@@ -83,4 +85,13 @@ export default class SnakeModel extends Item {
         }
         return nextCell;
     }
+    
+    setIsAlive(isAlive: boolean) {
+        this._isAlive = isAlive;
+    };
+    
+    getIsAlive(): boolean {
+        return this._isAlive;
+    }
+
 }

@@ -1,10 +1,12 @@
 import { createRef, useEffect, useState } from "react"
 import { DIRECTION } from "../../enums/Direction";
-import { ITEM_STATE } from "../../enums/ItemState";
-import "./BoardController"
-import BoardController from "./BoardController";
+import { ITEM_STATE } from '../../enums/ItemState';
+
 import Keyboard from './Keyboard';
 import AppleModel from '../../models/AppleModel';
+import BoardController from '../../models/BoardModel';
+import BoardModel from '../../models/BoardModel';
+import SnakeModel from '../../models/SnakeModel';
 
 
 interface BoardProps {
@@ -15,10 +17,12 @@ interface BoardProps {
 
 export function Board(props: BoardProps) {
     const [board, setBoard] = useState<any>(Array.from({ length: props.height }, () => Array.from({ length: props.width }, () => 0)));
-    const [boardController, ] = useState<any>(new BoardController(board));
+    const [boardController, ] = useState<any>(new BoardModel(board, props.width, props.height));
     // Init
     useEffect(() => {
         boardController.initGame();
+        boardController.addSnake(new SnakeModel(3, 3));
+        boardController.addApple(new AppleModel(3, 5))
         boardController.drawApple();
         handleChangeBoard();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,14 +49,7 @@ export function Board(props: BoardProps) {
 
     // Button onClick handler
     const execute = () => {
-        let nextCell = boardController.getSnake().getNextCell(DIRECTION.DOWN);
-        let {x, y} = nextCell.position;
-        if (board[y][x] === ITEM_STATE.BLANK) {
-            boardController.getSnake().move(DIRECTION.DOWN);
-        } else if (board[y][x] === ITEM_STATE.APPLE) {
-            let apple = new AppleModel(x, y);
-            boardController.getSnake().eat(apple);
-        }
+        boardController.moveHandler(DIRECTION.DOWN);
         handleChangeBoard();
     }
 
