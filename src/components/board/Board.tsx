@@ -7,6 +7,7 @@ import AppleModel from '../../models/AppleModel';
 import BoardController from '../../models/BoardModel';
 import BoardModel from '../../models/BoardModel';
 import SnakeModel from '../../models/SnakeModel';
+import { KeyboardEventHandler } from "react";
 
 
 interface BoardProps {
@@ -53,6 +54,24 @@ export function Board(props: BoardProps) {
         handleChangeBoard();
     }
 
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        console.log('press key');
+        switch (event.key){
+            case 'ArrowDown': 
+                boardController.moveHandler(DIRECTION.DOWN);
+                break;
+            case 'ArrowUp':
+                boardController.moveHandler(DIRECTION.UP);
+                break;
+            case 'ArrowLeft':
+                boardController.moveHandler(DIRECTION.LEFT);
+                break;
+            case 'ArrowRight':
+                boardController.moveHandler(DIRECTION.RIGHT);
+                break;
+        }
+        handleChangeBoard();
+    }
 
     const renderBoard = () => {
         let newBoard = Object.assign([], board);
@@ -72,7 +91,7 @@ export function Board(props: BoardProps) {
             </li>
         })
     }
-    return <div>
+    return <div onKeyUp={handleKeyPress} tabIndex={0}>
         <div className='board-wrapper'>
             <ul>
                 {renderBoard()}
