@@ -4,4 +4,5 @@ export enum ITEM_STATE {
     APPLE,
     GOLDEN_APPLE,
     STONE,
+    EMPTY
 }

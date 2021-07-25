@@ -50,7 +50,6 @@ export class SinglyLinkedList<T> {
         if (this._tail) {
             this._afterTail = new LinkedNode<T>(this._tail?.get_elem());
         }
-        console.log('After tail', this._afterTail);
         let prevNode: LinkedNode<T>|null = this._tail? this._tail.get_prev():null;
         prevNode?.set_next(null);
         this._tail = prevNode;
@@ -62,7 +61,6 @@ export class SinglyLinkedList<T> {
     }
 
     getHead() {
-        console.log("SLL Head", JSON.parse(JSON.stringify(this._head)));
         return this._head;
     }
 

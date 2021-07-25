@@ -73,8 +73,7 @@ export default class SnakeModel extends Item {
         let headMeat = this._body?.getHead()?.get_elem();
         let x_head: number = headMeat? headMeat.position.x : 3;
         let y_head: number = headMeat? headMeat.position.y : 3;
-
-        let x_offset: number = !(direction%2)? direction-1: 0;
+        let x_offset: number = (!(direction%2))? direction-1: 0;
         let y_offset: number = (direction%2)? direction-2 : 0;
         let nextCell: any = {
             position: {
