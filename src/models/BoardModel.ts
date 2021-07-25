@@ -65,6 +65,15 @@ export default class BoardModel {
             case ITEM_STATE.APPLE:
                 let apple = new AppleModel(x, y);
                 this._snake?.eat(apple);
+                // Create a other apple
+                let x_apple: number, y_apple: number;
+                do {
+                    x_apple = Math.floor(Math.random() * this._width);
+                    y_apple = Math.floor(Math.random() * this._height);
+                } while (!(this.getCellValue(x_apple, y_apple) === ITEM_STATE.BLANK));
+                // console.log(`create apple at ${x_apple}, ${y_apple}`);
+                this._apple = new AppleModel(x_apple, y_apple);
+                this.drawApple();
                 break;
             case ITEM_STATE.SNAKE:
                 this.gameOver();
