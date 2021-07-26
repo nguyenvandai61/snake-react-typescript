@@ -10,6 +10,7 @@ export default class BoardModel {
     private _snake: Snake | null = null;
     private _apple: Apple | null = null;
     private _board: Array<Array<number>>;
+    private _direction: DIRECTION = DIRECTION.RIGHT;
     
     constructor(board: Array<Array<number>>, width: number, height: number) {
         this._board = board;
@@ -28,9 +29,17 @@ export default class BoardModel {
     initGame = () => {
         console.log('init game');
     }
+    
+   
 
+    updateDraw = () => {
+        console.log('update draw');
+        this.drawSnakeMove();
+        this.drawApple();
+    }
     gameOver = () => {
         this._snake?.setIsAlive(false);
+        console.log('game over');
         // alert('Game Over');
     }
 
@@ -42,25 +51,34 @@ export default class BoardModel {
 
     drawSnakeMove() {
         if (!this._snake) return;
+        console.log('A');
         let snakeBody = this._snake.getSnakeBody();
         let iterMeat = snakeBody?.getHead();
         let iterMeat2 = snakeBody?.getAfterTail(); 
         let head = iterMeat ? iterMeat.get_elem().position : { x: 3, y: 3 };
         let afterTail = iterMeat2? iterMeat2.get_elem().position : { x: 3, y: 3 };
-        
+        console.log('B');
         // highlight head
         this._board[afterTail.y][afterTail.x] = 0;
         this._board[head.y][head.x] = 1;
     }
 
-    moveHandler(direction: DIRECTION) {
-        let nextCell = this._snake?.getNextCell(direction);
+    setDirection(direction: DIRECTION) {
+        // No opposiite direction
+        if ((this._direction+direction)%2 === 0) return;
+        this._direction = direction;
+    }
+
+
+    moveHandler() {
+        console.log(this._snake);
+        let nextCell = this._snake?.getNextCell(this._direction);
         let {x, y} = nextCell.position;
         let nextCellValue: ITEM_STATE = this.getCellValue(x, y);
-        
+        console.log(x, y);
         switch (nextCellValue) {
             case ITEM_STATE.BLANK:
-                this._snake?.move(direction);
+                this._snake?.move(this._direction);
                 break;
             case ITEM_STATE.APPLE:
                 let apple = new AppleModel(x, y);
@@ -76,10 +94,10 @@ export default class BoardModel {
                 this.drawApple();
                 break;
             case ITEM_STATE.SNAKE:
-                this.gameOver();
+                // this.gameOver();
                 break;
             case ITEM_STATE.WALL:
-                this.gameOver();
+                // this.gameOver();
                 break;
         }
     }
@@ -96,5 +114,9 @@ export default class BoardModel {
             return ITEM_STATE.WALL;
         }
         return this._board[y][x];
+    }
+
+    getDirection() {
+        return DIRECTION[this._direction];
     }
 }

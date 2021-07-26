@@ -26,14 +26,21 @@ export function Board(props: BoardProps) {
         boardController.addApple(new AppleModel(3, 5))
         boardController.drawApple();
         handleChangeBoard();
+        createAGameInterval();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     
-
+    const createAGameInterval = () => {
+        let gameInterval = setInterval((): void => {
+            boardController.moveHandler();
+            boardController.updateDraw();
+            handleChangeBoard();
+        }, 1000);
+        // return gameInterval;
+    }
     // Update
     const handleChangeBoard = () => {
         let copy = [...board];
-        boardController.drawSnakeMove();
         setBoard(copy);
     }
     
@@ -55,19 +62,18 @@ export function Board(props: BoardProps) {
     }
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
-        console.log('press key');
         switch (event.key){
             case 'ArrowDown': 
-                boardController.moveHandler(DIRECTION.DOWN);
+                boardController.setDirection(DIRECTION.DOWN);
                 break;
             case 'ArrowUp':
-                boardController.moveHandler(DIRECTION.UP);
+                boardController.setDirection(DIRECTION.UP);
                 break;
             case 'ArrowLeft':
-                boardController.moveHandler(DIRECTION.LEFT);
+                boardController.setDirection(DIRECTION.LEFT);
                 break;
             case 'ArrowRight':
-                boardController.moveHandler(DIRECTION.RIGHT);
+                boardController.setDirection(DIRECTION.RIGHT);
                 break;
         }
         handleChangeBoard();
@@ -91,6 +97,15 @@ export function Board(props: BoardProps) {
             </li>
         })
     }
+
+    const getInfo = () => {
+        let snake = boardController.getSnake();
+        let headPosition = snake && snake.getHead().get_elem().position;
+        return {
+            headPosition,
+        }
+    }
+
     return <div onKeyUp={handleKeyPress} tabIndex={0}>
         <div className='board-wrapper'>
             <ul>
@@ -99,5 +114,14 @@ export function Board(props: BoardProps) {
         </div>
         <Keyboard></Keyboard>
         <button onClick={execute}>Execute</button>
+        <div>
+            {boardController.getDirection()}
+            <span>
+                x: {getInfo().headPosition?.x}
+            </span>
+            <span>
+                y: {getInfo().headPosition?.y}
+            </span>
+        </div>
     </div>
 }
